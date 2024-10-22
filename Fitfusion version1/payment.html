@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .payment-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .payment-method {
+            margin-bottom: 20px;
+        }
+        .payment-method label {
+            margin-right: 10px;
+        }
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            color: red;
+            margin-bottom: 20px;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-container">
+    <h2>Payment Information</h2>
+    
+    <div class="timer" id="timer">Time Left: 05:00</div>
+    
+    <form action="/submit-payment" method="post">
+        <!-- Personal Information -->
+        <div class="form-group">
+            <label for="full-name">Full Name</label>
+            <input type="text" id="full-name" name="full-name" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-group payment-method">
+            <label>Select Payment Method:</label>
+            <input type="radio" id="upi" name="payment-method" value="UPI" required>
+            <label for="upi">UPI</label>
+            <input type="radio" id="card" name="payment-method" value="Card" required>
+            <label for="card">Credit/Debit Card</label>
+        </div>
+
+        <!-- UPI Payment -->
+        <div id="upi-details" style="display:none;">
+            <div class="form-group">
+                <label for="upi-id">UPI ID</label>
+                <input type="text" id="upi-id" name="upi-id" placeholder="your-upi-id@bank" required>
+            </div>
+        </div>
+
+        <!-- Card Payment -->
+        <div id="card-details" style="display:none;">
+            <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry">Expiry Date</label>
+                <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" name="cvv" placeholder="123" required>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" onclick="window.location.href='index2.html';">Make Payment</button>
+    </form>
+</div>
+
+<script>
+    // Toggle payment method fields
+    document.querySelectorAll('input[name="payment-method"]').forEach((elem) => {
+        elem.addEventListener("change", function(event) {
+            let upiDetails = document.getElementById("upi-details");
+            let cardDetails = document.getElementById("card-details");
+            if (event.target.value === "UPI") {
+                upiDetails.style.display = "block";
+                cardDetails.style.display = "none";
+            } else if (event.target.value === "Card") {
+                upiDetails.style.display = "none";
+                cardDetails.style.display = "block";
+            }
+        });
+    });
+
+    // Timer script
+    let timer = document.getElementById("timer");
+    let timeLeft = 300; // 5 minutes in seconds
+
+    let countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timer.textContent = "Time is up! Please try again.";
+            document.querySelector("button[type='submit']").disabled = true;
+        } else {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timer.textContent = `Time Left: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timeLeft--;
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>
